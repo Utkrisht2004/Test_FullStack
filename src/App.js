@@ -1,23 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+  const [data, setData] = useState({}); // Fixed default state
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/members") // Use full URL
+      .then(res => res.json())
+      .then(data => {
+        setData(data);
+        console.log(data); // Debugging: Ensure correct data is fetched
+      })
+      .catch(error => console.error("Error fetching data:", error));
+  }, []);
+  
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1>Members List</h1>
+      <ul>
+        {data.members ? data.members.map((member, index) => (
+          <li key={index}>{member}</li>
+        )) : <p>Loading...</p>}
+      </ul>
     </div>
   );
 }
